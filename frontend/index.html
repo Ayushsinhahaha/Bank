@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>ServicePortal - Welcome</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* HEADER */
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 50px;
+        }
+
+        .header .logo {
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+
+        .header h1 {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea, #38ef7d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.7;
+            max-width: 450px;
+            line-height: 1.6;
+        }
+
+        /* PORTAL CARDS */
+        .portals-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .portal-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .portal-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Individual Card Colors */
+        .portal-card.user:hover {
+            border-color: #667eea;
+            box-shadow: 0 20px 60px rgba(102, 126, 234, 0.3);
+        }
+
+        .portal-card.agent:hover {
+            border-color: #11998e;
+            box-shadow: 0 20px 60px rgba(17, 153, 142, 0.3);
+        }
+
+        .portal-card.admin:hover {
+            border-color: #e74c3c;
+            box-shadow: 0 20px 60px rgba(231, 76, 60, 0.3);
+        }
+
+        .portal-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        .portal-card.user .portal-icon {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .portal-card.agent .portal-icon {
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+        }
+
+        .portal-card.admin .portal-icon {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        .portal-card h2 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .portal-card p {
+            font-size: 13px;
+            opacity: 0.7;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .portal-features {
+            list-style: none;
+            text-align: left;
+            width: 100%;
+            margin-bottom: 25px;
+        }
+
+        .portal-features li {
+            font-size: 13px;
+            opacity: 0.8;
+            padding: 5px 0;
+        }
+
+        .portal-features li::before {
+            margin-right: 8px;
+        }
+
+        .portal-card.user .portal-features li::before {
+            content: '✅';
+        }
+
+        .portal-card.agent .portal-features li::before {
+            content: '🔔';
+        }
+
+        .portal-card.admin .portal-features li::before {
+            content: '⚙️';
+        }
+
+        .portal-btn {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            color: white;
+            transition: opacity 0.2s;
+        }
+
+        .portal-card.user .portal-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .portal-card.agent .portal-btn {
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            color: #1a1a2e;
+        }
+
+        .portal-card.admin .portal-btn {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        .portal-btn:hover { opacity: 0.9; }
+
+        /* FOOTER */
+        .footer {
+            margin-top: 40px;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 13px;
+            text-align: center;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .portals-grid {
+                grid-template-columns: 1fr;
+                max-width: 380px;
+            }
+            .header h1 { font-size: 26px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="logo">🛎️</div>
+        <h1>ServicePortal</h1>
+        <p>
+            A complete platform to raise and manage service requests
+            with real-time notifications and tracking.
+        </p>
+    </div>
+
+    <!-- PORTAL CARDS -->
+    <div class="portals-grid">
+
+        <!-- USER PORTAL -->
+        <a class="portal-card user" href="login-user.html">
+            <div class="portal-icon">👤</div>
+            <h2>User Portal</h2>
+            <p>
+                Register and raise service requests for
+                yourself or your family members.
+            </p>
+            <ul class="portal-features">
+                <li>Raise Service Requests</li>
+                <li>Track Request Status</li>
+                <li>Get Real-time Updates</li>
+                <li>View Request History</li>
+            </ul>
+            <button class="portal-btn">
+                Login as User →
+            </button>
+        </a>
+
+        <!-- AGENT PORTAL -->
+        <a class="portal-card agent" href="login-agent.html">
+            <div class="portal-icon">🧑‍💼</div>
+            <h2>Agent Portal</h2>
+            <p>
+                Handle assigned service requests and
+                update status with real-time notifications.
+            </p>
+            <ul class="portal-features">
+                <li>View Assigned Tasks</li>
+                <li>Get Instant Notifications</li>
+                <li>Update Request Status</li>
+                <li>Add Comments & Updates</li>
+            </ul>
+            <button class="portal-btn">
+                Login as Agent →
+            </button>
+        </a>
+
+        <!-- ADMIN PORTAL -->
+        <a class="portal-card admin" href="login-admin.html">
+            <div class="portal-icon">👨‍💻</div>
+            <h2>Admin Portal</h2>
+            <p>
+                Manage all requests, users, agents
+                and monitor the entire platform.
+            </p>
+            <ul class="portal-features">
+                <li>Manage All Requests</li>
+                <li>Create & Manage Agents</li>
+                <li>Assign Requests to Agents</li>
+                <li>View Platform Analytics</li>
+            </ul>
+            <button class="portal-btn">
+                Login as Admin →
+            </button>
+        </a>
+
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+        © 2024 ServicePortal. All rights reserved.
+    </div>
+
+</body>
+</html>

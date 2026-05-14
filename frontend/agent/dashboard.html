@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Agent Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f0f2f5;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            padding: 0 30px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.15);
+        }
+
+        .nav-brand { font-size: 20px; font-weight: 700; }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .notif-btn {
+            position: relative;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .notif-badge {
+            position: absolute;
+            top: -3px; right: -3px;
+            background: #ff4757;
+            color: white;
+            border-radius: 50%;
+            width: 18px; height: 18px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px 18px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .notif-panel {
+            position: fixed;
+            top: 65px; right: 20px;
+            width: 320px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.15);
+            display: none;
+            z-index: 999;
+            overflow: hidden;
+        }
+
+        .notif-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notif-header h4 { font-size: 15px; color: #2c3e50; }
+        .mark-read-btn {
+            background: none; border: none;
+            color: #11998e; font-size: 12px; cursor: pointer;
+        }
+
+        .notif-list { max-height: 350px; overflow-y: auto; }
+
+        .notif-item {
+            padding: 12px 20px;
+            border-bottom: 1px solid #fafafa;
+            font-size: 13px; color: #555;
+        }
+
+        .notif-item.unread { background: #f0fdf9; }
+        .notif-time { font-size: 11px; color: #aaa; margin-top: 4px; }
+
+        .container {
+            max-width: 1100px;
+            margin: 25px auto;
+            padding: 0 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 14px;
+            text-align: center;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            border-top: 4px solid #11998e;
+        }
+
+        .stat-card:nth-child(2) { border-top-color: #f39c12; }
+        .stat-card:nth-child(3) { border-top-color: #3498db; }
+        .stat-card:nth-child(4) { border-top-color: #27ae60; }
+
+        .stat-icon { font-size: 28px; margin-bottom: 8px; }
+        .stat-number { font-size: 28px; font-weight: 800; color: #2c3e50; }
+        .stat-label { color: #999; font-size: 12px; margin-top: 4px; }
+
+        .card {
+            background: white;
+            border-radius: 14px;
+            padding: 25px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            margin-bottom: 22px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .card-header h3 { color: #2c3e50; font-size: 17px; }
+
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .filter-tab {
+            padding: 7px 16px;
+            border: 2px solid #eee;
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .filter-tab.active {
+            background: #11998e;
+            color: white;
+            border-color: #11998e;
+        }
+
+        .requests-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 18px;
+        }
+
+        .request-card {
+            border: 2px solid #f0f0f0;
+            border-radius: 12px;
+            padding: 18px;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+
+        .request-card:hover {
+            border-color: #11998e;
+            transform: translateY(-2px);
+        }
+
+        .req-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .req-title {
+            font-weight: 700;
+            color: #2c3e50;
+            font-size: 15px;
+            flex: 1;
+        }
+
+        .req-meta {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+
+        .req-desc {
+            font-size: 13px;
+            color: #555;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-pending { background: #fff3cd; color: #856404; }
+        .badge-assigned { background: #cce5ff; color: #004085; }
+        .badge-in_progress { background: #d4edda; color: #155724; }
+        .badge-completed { background: #d1ecf1; color: #0c5460; }
+        .badge-cancelled { background: #f8d7da; color: #721c24; }
+
+        .priority-high { color: #e74c3c; font-weight: 700; }
+        .priority-medium { color: #f39c12; font-weight: 700; }
+        .priority-low { color: #27ae60; font-weight: 700; }
+
+        .action-area {
+            border-top: 1px solid #f5f5f5;
+            padding-top: 15px;
+            margin-top: 5px;
+        }
+
+        .action-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .status-select {
+            flex: 1;
+            padding: 8px 12px;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            font-size: 13px;
+        }
+
+        .btn-update {
+            padding: 8px 18px;
+            background: #11998e;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .btn-update:hover { opacity: 0.9; }
+
+        .comment-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-top: 10px;
+            font-family: inherit;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #bbb;
+            padding: 50px;
+            font-size: 14px;
+        }
+
+        .empty-state .icon { font-size: 50px; margin-bottom: 12px; }
+
+        .toast {
+            position: fixed;
+            bottom: 25px; right: 25px;
+            background: #11998e;
+            color: white;
+            padding: 14px 22px;
+            border-radius: 10px;
+            font-size: 14px;
+            display: none;
+            z-index: 9999;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            max-width: 320px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+    <div class="nav-brand">🧑‍💼 Agent Portal</div>
+    <div class="nav-right">
+        <span style="font-size:14px;opacity:0.9" id="agentName"></span>
+        <button class="notif-btn" onclick="toggleNotifPanel()">
+            🔔
+            <span class="notif-badge" id="notifBadge" style="display:none">0</span>
+        </button>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+</nav>
+
+<!-- NOTIFICATION PANEL -->
+<div class="notif-panel" id="notifPanel">
+    <div class="notif-header">
+        <h4>🔔 Notifications</h4>
+        <button class="mark-read-btn" onclick="markAllRead()">
+            Mark all read
+        </button>
+    </div>
+    <div class="notif-list" id="notifList">
+        <div class="notif-item">No notifications</div>
+    </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- MAIN CONTENT -->
+<div class="container">
+
+    <!-- STATS -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">📋</div>
+            <div class="stat-number" id="statTotal">0</div>
+            <div class="stat-label">Total Tasks</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">⏳</div>
+            <div class="stat-number" id="statPending">0</div>
+            <div class="stat-label">Pending</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">🔄</div>
+            <div class="stat-number" id="statActive">0</div>
+            <div class="stat-label">Active</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">✅</div>
+            <div class="stat-number" id="statDone">0</div>
+            <div class="stat-label">Completed</div>
+        </div>
+    </div>
+
+    <!-- TASKS CARD -->
+    <div class="card">
+        <div class="card-header">
+            <h3>📋 Service Requests</h3>
+            <button onclick="loadTasks()"
+                style="padding:7px 15px;background:#11998e;color:white;
+                border:none;border-radius:8px;cursor:pointer;font-size:13px">
+                🔄 Refresh
+            </button>
+        </div>
+
+        <!-- FILTER TABS -->
+        <div class="filter-tabs">
+            <button class="filter-tab active" onclick="filterTasks('all', this)">
+                All
+            </button>
+            <button class="filter-tab" onclick="filterTasks('pending', this)">
+                ⏳ Pending
+            </button>
+            <button class="filter-tab" onclick="filterTasks('assigned', this)">
+                📌 Assigned
+            </button>
+            <button class="filter-tab" onclick="filterTasks('in_progress', this)">
+                🔄 In Progress
+            </button>
+            <button class="filter-tab" onclick="filterTasks('completed', this)">
+                ✅ Completed
+            </button>
+        </div>
+
+        <div class="requests-grid" id="requestsGrid">
+            <div class="empty-state" style="grid-column:1/-1">
+                <div class="icon">📭</div>
+                <div>Loading tasks...</div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+<script>
+    const API = 'http://localhost:5000/api';
+    const token = localStorage.getItem('token');
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+    if (!token || user.role !== 'agent') {
+        window.location.href = '../index.html';
+    }
+
+    document.getElementById('agentName').textContent = `Hi, ${user.name}!`;
+
+    // ── SOCKET.IO ──────────────────────────────────────
+    const socket = io('http://localhost:5000');
+    socket.emit('join', user.id, 'agent');
+
+    socket.on('new_request', (data) => {
+        showToast('🔔 ' + data.message);
+        loadTasks();
+        loadNotifications();
+    });
+
+    socket.on('new_assignment', (data) => {
+        showToast('📌 ' + data.message);
+        loadTasks();
+        loadNotifications();
+    });
+
+    let allTasks = [];
+    let currentFilter = 'all';
+
+    // ── LOAD TASKS ─────────────────────────────────────
+    async function loadTasks() {
+        try {
+            const res = await fetch(`${API}/requests/agent-tasks`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            const data = await res.json();
+
+            if (!data.success) return;
+
+            allTasks = data.requests;
+
+            // Stats
+            document.getElementById('statTotal').textContent = allTasks.length;
+            document.getElementById('statPending').textContent =
+                allTasks.filter(r => r.status === 'pending').length;
+            document.getElementById('statActive').textContent =
+                allTasks.filter(r =>
+                    ['assigned','in_progress'].includes(r.status)).length;
+            document.getElementById('statDone').textContent =
+                allTasks.filter(r => r.status === 'completed').length;
+
+            renderTasks(currentFilter);
+
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    // ── RENDER TASKS ───────────────────────────────────
+    function renderTasks(filter) {
+        currentFilter = filter;
+        const grid = document.getElementById('requestsGrid');
+
+        const filtered = filter === 'all'
+            ? allTasks
+            : allTasks.filter(r => r.status === filter);
+
+        if (filtered.length === 0) {
+            grid.innerHTML = `
+                <div class="empty-state" style="grid-column:1/-1">
+                    <div class="icon">📭</div>
+                    <div>No ${filter === 'all' ? '' : filter} requests found</div>
+                </div>`;
+            return;
+        }
+
+        grid.innerHTML = filtered.map(r => `
+            <div class="request-card">
+                <div class="req-header">
+                    <div class="req-title">${r.title}</div>
+                    <span class="badge badge-${r.status}">
+                        ${r.status.replace('_', ' ')}
+                    </span>
+                </div>
+                <div class="req-meta">
+                    👤 <strong>${r.user_id?.full_name || 'Unknown'}</strong> &nbsp;|&nbsp;
+                    📱 ${r.user_id?.phone || 'N/A'} &nbsp;|&nbsp;
+                    🏷️ ${r.service_type} &nbsp;|&nbsp;
+                    <span class="priority-${r.priority}">
+                        ${r.priority.toUpperCase()}
+                    </span>
+                </div>
+                <div class="req-desc">
+                    ${r.description.substring(0, 120)}
+                    ${r.description.length > 120 ? '...' : ''}
+                </div>
+                <div style="font-size:11px;color:#bbb;margin-bottom:12px">
+                    📅 ${new Date(r.createdAt).toLocaleString('en-IN')}
+                </div>
+
+                ${r.status !== 'completed' && r.status !== 'cancelled' ? `
+                <div class="action-area">
+                    <div class="action-row">
+                        <select class="status-select" id="status_${r._id}">
+                            <option value="in_progress"
+                                ${r.status==='in_progress'?'selected':''}>
+                                🔄 In Progress
+                            </option>
+                            <option value="completed">✅ Completed</option>
+                            <option value="cancelled">❌ Cancelled</option>
+                        </select>
+                        <button class="btn-update"
+                            onclick="updateStatus('${r._id}')">
+                            Update
+                        </button>
+                    </div>
+                    <input type="text" class="comment-input"
+                        id="comment_${r._id}"
+                        placeholder="Add a comment (optional)..." />
+                </div>` : `
+                <div style="text-align:center;color:#27ae60;font-weight:700;
+                    font-size:13px;padding-top:10px;border-top:1px solid #f5f5f5">
+                    ${r.status === 'completed' ? '✅ Task Completed' : '❌ Cancelled'}
+                </div>`}
+            </div>
+        `).join('');
+    }
+
+    // ── FILTER TASKS ───────────────────────────────────
+    function filterTasks(filter, btn) {
+        document.querySelectorAll('.filter-tab')
+            .forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderTasks(filter);
+    }
+
+    // ── UPDATE STATUS ──────────────────────────────────
+    async function updateStatus(requestId) {
+        const status = document.getElementById(`status_${requestId}`).value;
+        const comment = document.getElementById(`comment_${requestId}`)?.value;
+
+        try {
+            const res = await fetch(`${API}/requests/update-status/${requestId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ status, comment }),
+            });
+
+            const data = await res.json();
+            if (data.success) {
+                showToast(`✅ Status updated to: ${status.replace('_',' ')}`);
+                loadTasks();
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    // ── NOTIFICATIONS ───────────────────────────────────
+    async function loadNotifications() {
+        try {
+            const res = await fetch(`${API}/requests/notifications`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            const data = await res.json();
+
+            if (!data.success) return;
+
+            const badge = document.getElementById('notifBadge');
+            if (data.unreadCount > 0) {
+                badge.textContent = data.unreadCount;
+                badge.style.display = 'flex';
+            } else {
+                badge.style.display = 'none';
+            }
+
+            const list = document.getElementById('notifList');
+            list.innerHTML = data.notifications.length === 0
+                ? '<div class="notif-item">No notifications</div>'
+                : data.notifications.map(n => `
+                    <div class="notif-item ${n.is_read ? '' : 'unread'}">
+                        ${n.message}
+                        <div class="notif-time">
+                            ${new Date(n.createdAt).toLocaleString('en-IN')}
+                        </div>
+                    </div>
+                `).join('');
+
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    async function markAllRead() {
+        await fetch(`${API}/requests/notifications/read-all`, {
+            method: 'PUT',
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        loadNotifications();
+    }
+
+    function toggleNotifPanel() {
+        const panel = document.getElementById('notifPanel');
+        panel.style.display =
+            panel.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function showToast(msg) {
+        const toast = document.getElementById('toast');
+        toast.textContent = msg;
+        toast.style.display = 'block';
+        setTimeout(() => (toast.style.display = 'none'), 5000);
+    }
+
+    function logout() {
+        localStorage.clear();
+        window.location.href = '../index.html';
+    }
+
+    // ── INIT ────────────────────────────────────────────
+    loadTasks();
+    loadNotifications();
+    setInterval(loadNotifications, 30000);
+    setInterval(loadTasks, 60000);
+</script>
+</body>
+</html>

@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>ServicePortal - Agent Login</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-wrapper {
+            display: flex;
+            width: 860px;
+            min-height: 520px;
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 30px 100px rgba(0, 0, 0, 0.5);
+        }
+
+        /* LEFT SIDE */
+        .left-side {
+            flex: 1;
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            padding: 50px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            color: white;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            font-size: 13px;
+            margin-bottom: 40px;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover { color: white; }
+
+        .portal-badge {
+            display: inline-block;
+            background: rgba(0,0,0,0.15);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            color: #1a1a2e;
+        }
+
+        .left-side h1 {
+            font-size: 30px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            line-height: 1.2;
+            color: #1a1a2e;
+        }
+
+        .left-side p {
+            font-size: 14px;
+            color: rgba(26,26,46,0.7);
+            line-height: 1.7;
+            margin-bottom: 30px;
+        }
+
+        .feature-list { list-style: none; }
+
+        .feature-list li {
+            font-size: 13px;
+            color: rgba(26,26,46,0.85);
+            padding: 7px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+        }
+
+        .feature-list li:last-child { border-bottom: none; }
+
+        .feature-icon {
+            width: 28px;
+            height: 28px;
+            background: rgba(0,0,0,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        /* RIGHT SIDE */
+        .right-side {
+            flex: 1;
+            padding: 50px 45px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .agent-icon {
+            width: 65px;
+            height: 65px;
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .right-side h2 {
+            font-size: 26px;
+            font-weight: 800;
+            color: #1a1a2e;
+            margin-bottom: 6px;
+        }
+
+        .right-side .subtitle {
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .info-note {
+            background: #f0fdf9;
+            border: 1px solid #b2dfdb;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 12px;
+            color: #00695c;
+            margin-bottom: 22px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 7px;
+            color: #444;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .input-wrap { position: relative; }
+
+        .input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 13px 14px 13px 42px;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s;
+            background: #fafafa;
+            color: #333;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #11998e;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(17,153,142,0.1);
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            color: #1a1a2e;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 5px;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(17,153,142,0.4);
+        }
+
+        .btn-login:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 18px;
+            font-size: 13px;
+            display: none;
+        }
+
+        .alert-error {
+            background: #fdecea;
+            color: #c0392b;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .alert-success {
+            background: #eafaf1;
+            color: #1e8449;
+            border-left: 4px solid #27ae60;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(0,0,0,0.2);
+            border-top-color: #1a1a2e;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        @media (max-width: 700px) {
+            .login-wrapper { flex-direction: column; width: 100%; }
+            .left-side { padding: 30px; }
+            .right-side { padding: 30px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-wrapper">
+
+    <!-- LEFT SIDE -->
+    <div class="left-side">
+        <a class="back-link" href="index.html">
+            ← Back to Portal Selection
+        </a>
+
+        <div class="portal-badge">🧑‍💼 AGENT PORTAL</div>
+
+        <h1>Agent<br/>Dashboard Access</h1>
+
+        <p>
+            Login to view and manage assigned service requests.
+            Get instant notifications when new tasks are assigned to you.
+        </p>
+
+        <ul class="feature-list">
+            <li>
+                <div class="feature-icon">🔔</div>
+                Instant task notifications
+            </li>
+            <li>
+                <div class="feature-icon">📋</div>
+                View all pending & assigned tasks
+            </li>
+            <li>
+                <div class="feature-icon">🔄</div>
+                Update request status live
+            </li>
+            <li>
+                <div class="feature-icon">💬</div>
+                Add comments and updates
+            </li>
+        </ul>
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="right-side">
+
+        <div class="agent-icon">🧑‍💼</div>
+
+        <h2>Agent Login</h2>
+        <p class="subtitle">Sign in to your agent account</p>
+
+        <div class="info-note">
+            ℹ️ Agent accounts are created by Admin only.
+            Contact your administrator if you need access.
+        </div>
+
+        <div class="alert" id="alert"></div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label>Agent Email</label>
+                <div class="input-wrap">
+                    <span class="input-icon">📧</span>
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="Enter your agent email"
+                        required
+                        autocomplete="email"
+                    />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                <div class="input-wrap">
+                    <span class="input-icon">🔒</span>
+                    <input
+                        type="password"
+                        id="password"
+                        placeholder="Enter your password"
+                        required
+                        autocomplete="current-password"
+                    />
+                </div>
+            </div>
+
+            <button type="submit" class="btn-login" id="loginBtn">
+                Login to Agent Portal →
+            </button>
+        </form>
+
+    </div>
+</div>
+
+<script>
+    const API = 'http://localhost:5000/api';
+
+    // If already logged in redirect
+    const existingToken = localStorage.getItem('token');
+    const existingUser = JSON.parse(localStorage.getItem('user') || '{}');
+    if (existingToken && existingUser.role === 'agent') {
+        window.location.href = 'agent/dashboard.html';
+    }
+
+    document.getElementById('loginForm')
+    .addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const btn = document.getElementById('loginBtn');
+        btn.innerHTML = '<span class="spinner"></span> Logging in...';
+        btn.disabled = true;
+
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+
+        try {
+            const res = await fetch(`${API}/auth/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password }),
+            });
+
+            const data = await res.json();
+
+            if (data.success) {
+                // Strict role check for agent portal
+                if (data.user.role !== 'agent') {
+                    showAlert(
+                        `❌ This is an Agent portal. Your account role is 
+                        "${data.user.role}". Please use the correct portal.`,
+                        'error'
+                    );
+                    btn.innerHTML = 'Login to Agent Portal →';
+                    btn.disabled = false;
+                    return;
+                }
+
+                showAlert('✅ Login successful! Redirecting...', 'success');
+
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('user', JSON.stringify(data.user));
+
+                setTimeout(() => {
+                    window.location.href = 'agent/dashboard.html';
+                }, 1000);
+
+            } else {
+                showAlert('❌ ' + data.message, 'error');
+                btn.innerHTML = 'Login to Agent Portal →';
+                btn.disabled = false;
+            }
+
+        } catch (err) {
+            showAlert('❌ Server error. Please try again.', 'error');
+            btn.innerHTML = 'Login to Agent Portal →';
+            btn.disabled = false;
+        }
+    });
+
+    function showAlert(msg, type) {
+        const alert = document.getElementById('alert');
+        alert.textContent = msg;
+        alert.className = `alert alert-${type}`;
+        alert.style.display = 'block';
+    }
+</script>
+</body>
+</html>

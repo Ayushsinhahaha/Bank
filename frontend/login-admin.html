@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>ServicePortal - Admin Login</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e, #2c0a0a, #3d0000);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-wrapper {
+            display: flex;
+            width: 860px;
+            min-height: 520px;
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 30px 100px rgba(0, 0, 0, 0.6);
+        }
+
+        /* LEFT SIDE */
+        .left-side {
+            flex: 1;
+            background: linear-gradient(135deg, #c0392b, #e74c3c, #ff6b6b);
+            padding: 50px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            color: white;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            font-size: 13px;
+            margin-bottom: 40px;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover { color: white; }
+
+        .portal-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+
+        .left-side h1 {
+            font-size: 30px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            line-height: 1.2;
+        }
+
+        .left-side p {
+            font-size: 14px;
+            opacity: 0.8;
+            line-height: 1.7;
+            margin-bottom: 30px;
+        }
+
+        .feature-list { list-style: none; }
+
+        .feature-list li {
+            font-size: 13px;
+            opacity: 0.85;
+            padding: 7px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .feature-list li:last-child { border-bottom: none; }
+
+        .feature-icon {
+            width: 28px;
+            height: 28px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .security-note {
+            margin-top: 25px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+            padding: 12px 15px;
+            font-size: 12px;
+            opacity: 0.8;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* RIGHT SIDE */
+        .right-side {
+            flex: 1;
+            padding: 50px 45px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .admin-icon {
+            width: 65px;
+            height: 65px;
+            background: linear-gradient(135deg, #c0392b, #e74c3c);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .right-side h2 {
+            font-size: 26px;
+            font-weight: 800;
+            color: #1a1a2e;
+            margin-bottom: 6px;
+        }
+
+        .right-side .subtitle {
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .security-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #fdecea;
+            color: #c0392b;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 22px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 7px;
+            color: #444;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .input-wrap { position: relative; }
+
+        .input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 13px 14px 13px 42px;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s;
+            background: #fafafa;
+            color: #333;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #e74c3c;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(231,76,60,0.1);
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #c0392b, #e74c3c);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 5px;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(192,57,43,0.4);
+        }
+
+        .btn-login:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 18px;
+            font-size: 13px;
+            display: none;
+        }
+
+        .alert-error {
+            background: #fdecea;
+            color: #c0392b;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .alert-success {
+            background: #eafaf1;
+            color: #1e8449;
+            border-left: 4px solid #27ae60;
+        }
+
+        .attempt-counter {
+            text-align: center;
+            font-size: 12px;
+            color: #bbb;
+            margin-top: 12px;
+        }
+
+        .attempt-counter span {
+            color: #e74c3c;
+            font-weight: 700;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        @media (max-width: 700px) {
+            .login-wrapper { flex-direction: column; width: 100%; }
+            .left-side { padding: 30px; }
+            .right-side { padding: 30px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-wrapper">
+
+    <!-- LEFT SIDE -->
+    <div class="left-side">
+        <a class="back-link" href="index.html">
+            ← Back to Portal Selection
+        </a>
+
+        <div class="portal-badge">👨‍💻 ADMIN PORTAL</div>
+
+        <h1>Admin<br/>Control Center</h1>
+
+        <p>
+            Secure access to the admin dashboard. Manage all
+            service requests, agents, users and monitor
+            the entire platform in real-time.
+        </p>
+
+        <ul class="feature-list">
+            <li>
+                <div class="feature-icon">📊</div>
+                Full platform analytics
+            </li>
+            <li>
+                <div class="feature-icon">🧑‍💼</div>
+                Create & manage agents
+            </li>
+            <li>
+                <div class="feature-icon">📋</div>
+                Assign requests to agents
+            </li>
+            <li>
+                <div class="feature-icon">👥</div>
+                Manage all users
+            </li>
+        </ul>
+
+        <div class="security-note">
+            🔐 This is a restricted area. All login
+            attempts are monitored and logged.
+        </div>
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="right-side">
+
+        <div class="admin-icon">👨‍💻</div>
+
+        <h2>Admin Login</h2>
+        <p class="subtitle">Restricted access — Admins only</p>
+
+        <div class="security-badge">
+            🔐 Secure Admin Area
+        </div>
+
+        <div class="alert" id="alert"></div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label>Admin Email</label>
+                <div class="input-wrap">
+                    <span class="input-icon">📧</span>
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="Enter admin email"
+                        required
+                        autocomplete="off"
+                    />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Admin Password</label>
+                <div class="input-wrap">
+                    <span class="input-icon">🔑</span>
+                    <input
+                        type="password"
+                        id="password"
+                        placeholder="Enter admin password"
+                        required
+                        autocomplete="off"
+                    />
+                </div>
+            </div>
+
+            <button type="submit" class="btn-login" id="loginBtn">
+                🔐 Secure Admin Login →
+            </button>
+        </form>
+
+        <div class="attempt-counter" id="attemptCounter"></div>
+
+    </div>
+</div>
+
+<script>
+    const API = 'http://localhost:5000/api';
+
+    // If already logged in redirect
+    const existingToken = localStorage.getItem('token');
+    const existingUser = JSON.parse(localStorage.getItem('user') || '{}');
+    if (existingToken && existingUser.role === 'admin') {
+        window.location.href = 'admin/dashboard.html';
+    }
+
+    // Track failed attempts
+    let failedAttempts = 0;
+    const MAX_ATTEMPTS = 5;
+
+    document.getElementById('loginForm')
+    .addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        // Lock after max attempts
+        if (failedAttempts >= MAX_ATTEMPTS) {
+            showAlert(
+                '🚫 Too many failed attempts. Please try again later.',
+                'error'
+            );
+            return;
+        }
+
+        const btn = document.getElementById('loginBtn');
+        btn.innerHTML = '<span class="spinner"></span> Authenticating...';
+        btn.disabled = true;
+
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+
+        try {
+            const res = await fetch(`${API}/auth/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password }),
+            });
+
+            const data = await res.json();
+
+            if (data.success) {
+                // Strict admin role check
+                if (data.user.role !== 'admin') {
+                    failedAttempts++;
+                    showAlert(
+                        `🚫 Access Denied! This portal is for Admins only. 
+                        Your role: "${data.user.role}"`,
+                        'error'
+                    );
+                    updateAttemptCounter();
+                    btn.innerHTML = '🔐 Secure Admin Login →';
+                    btn.disabled = false;
+                    return;
+                }
+
+                // Success
+                failedAttempts = 0;
+                showAlert(
+                    '✅ Admin authenticated! Redirecting to dashboard...',
+                    'success'
+                );
+
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('user', JSON.stringify(data.user));
+
+                setTimeout(() => {
+                    window.location.href = 'admin/dashboard.html';
+                }, 1000);
+
+            } else {
+                failedAttempts++;
+                showAlert('❌ ' + data.message, 'error');
+                updateAttemptCounter();
+                btn.innerHTML = '🔐 Secure Admin Login →';
+                btn.disabled = false;
+            }
+
+        } catch (err) {
+            showAlert('❌ Server error. Please try again.', 'error');
+            btn.innerHTML = '🔐 Secure Admin Login →';
+            btn.disabled = false;
+        }
+    });
+
+    function updateAttemptCounter() {
+        const counter = document.getElementById('attemptCounter');
+        if (failedAttempts > 0) {
+            const remaining = MAX_ATTEMPTS - failedAttempts;
+            counter.innerHTML = remaining > 0
+                ? `⚠️ <span>${failedAttempts}</span> failed attempt(s). 
+                   ${remaining} remaining before lockout.`
+                : `🚫 Account temporarily locked. Refresh to retry.`;
+        }
+    }
+
+    function showAlert(msg, type) {
+        const alert = document.getElementById('alert');
+        alert.textContent = msg;
+        alert.className = `alert alert-${type}`;
+        alert.style.display = 'block';
+    }
+</script>
+</body>
+</html>
