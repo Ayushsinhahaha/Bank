@@ -595,10 +595,12 @@
         </div>
     </div>
 </div>
-
+<script src="/config.js"></script>
 <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
 <script>
-    const API = 'http://localhost:5000/api';
+    // const API = 'http://localhost:5000/api';
+        // const API = 'https://service-request-backend-fgol.onrender.com/api';
+        const API = CONFIG.API_URL;
     const token = localStorage.getItem('token');
     const user = JSON.parse(localStorage.getItem('user') || '{}');
 
@@ -608,7 +610,8 @@
 
     document.getElementById('adminName').textContent = user.name;
 
-    const socket = io('http://localhost:5000');
+    // const socket = io('http://localhost:5000');
+    const socket = io(CONFIG.SOCKET_URL);
     socket.on('new_request', () => {
         loadStats();
         loadAllRequests();
